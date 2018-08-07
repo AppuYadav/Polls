@@ -1,0 +1,35 @@
+{% extends "polls/base.html" %}
+
+{% block title %}
+    <title>Voting Question</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if error_message %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="margin-right: 10%; margin-left: 10%;" role="alert">
+            <strong>{{ error_message }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+
+     <div class="question_text">
+         <p class="question_view">{{ question.question_text }}</p>
+     </div>
+
+ <div class="question_text">
+    <form action="{% url 'polls:vote' question.id %}" method="post">
+        {% csrf_token %}
+        {% for choice in question.choice_set.all %}
+            <div class="custom-control custom-radio" style="margin-top: 5px;">
+                <input type="radio" class="custom-control-input" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+                <label  class="custom-control-label" for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
+            </div>
+        {% endfor %}
+        <input type="submit" value="Vote" class="btn btn-dark" style="margin-top: 10px;">
+    </form>
+ </div>
+
+{% endblock %}

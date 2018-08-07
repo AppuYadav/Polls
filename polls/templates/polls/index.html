@@ -1,0 +1,62 @@
+{% extends "polls/base.html" %}
+
+{% block title %}
+    <title>Citycash Poll</title>
+{% endblock %}
+
+{% block content %}
+    {% if latest_question_list %}
+
+            <form class="input-group md-form form-sm form-2 pl-0 question_text" style="width: 80% !important;" id="searchform" action="{% url 'polls:question_search_list_view' %}" method="get" accept-charset="utf-8">
+                <input class="form-control my-0 py-1 red-border" id="searchbox" name="q" type="text" placeholder="Search" aria-label="Search" style="margin-left: 2%;">
+                <div class="input-group-append">
+                    <button type="submit" class="input-group-text red lighten-3"><i class="fa fa-search text-grey" aria-hidden="true"></i></button>
+                </div>
+            </form>
+
+        {% for question in latest_question_list %}
+            <div class="question_text">
+                <a href="{% url 'polls:detail' question.question_id %}" style="text-decoration: none !important;">{{ question.question__question_text }}</a>
+                <div class="question_info">
+                    <div class="info_left">
+                        <span><i class="fa fa-heart" style="color: red !important;margin-right: 2px;"></i>{{ question.votes__sum }}</span>
+                    </div>
+                    <div class="info_right">
+                        <span style="text-align: right"><i class="fa fa-clock-o" style="color: #7c8faa !important;margin-right: 2px;"></i>{{ question.question__pub_date }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {% if is_paginated %}
+
+          <ul class="pagination" style="margin-top: 15px;margin-right: 10% !important;float: right !important;>
+            {% if page_obj.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}" style="color: black;">Previous</a></li>
+            {% else %}
+              <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+              {% if page_obj.number == i %}
+                <li class="page-item active"><span class="page-link" style="color: black;cursor: text;">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}" style="color: black;">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+              <li class="page-item"><a class="page-link" style="color: black;" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            {% else %}
+              <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+          </ul>
+
+        {% endif %}
+
+    {% else %}
+        <div class="question_text">
+            <p>No polls are available.</p>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
